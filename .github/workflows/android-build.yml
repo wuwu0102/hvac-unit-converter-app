@@ -16,18 +16,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Setup Java 21
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '17'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Install Capacitor
-        run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+      - name: Pin Capacitor 6 for CI
+        run: npm install @capacitor/core@6.1.2 @capacitor/cli@6.1.2 @capacitor/android@6.1.2 @capacitor/ios@6.1.2 --save-exact
 
       - name: Create Android project
         run: |
