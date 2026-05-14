@@ -8,8 +8,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout app repo
         uses: actions/checkout@v4
+        with:
+          path: app
+
+      - name: Checkout production web repo
+        uses: actions/checkout@v4
+        with:
+          repository: wuwu0102/hvac-unit-converter
+          ref: main
+          path: web
+
+      - name: Sync production web into app bundle
+        run: |
+          mkdir -p app/www
+          cp web/index.html app/www/index.html
+          cp web/app.js app/www/app.js
+          cp web/styles.css app/www/styles.css
+          cp -R web/src app/www/src
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -23,19 +40,22 @@ jobs:
           java-version: '17'
 
       - name: Install dependencies
+        working-directory: app
         run: npm install
 
       - name: Pin Capacitor 6 for CI
+        working-directory: app
         run: npm install @capacitor/core@6.1.2 @capacitor/cli@6.1.2 @capacitor/android@6.1.2 @capacitor/ios@6.1.2 --save-exact
 
       - name: Create Android project
+        working-directory: app
         run: |
           npx cap add android
           npx cap sync android
 
       - name: Build APK
+        working-directory: app/android
         run: |
-          cd android
           chmod +x ./gradlew
           ./gradlew assembleDebug
 
@@ -43,4 +63,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hvac-unit-converter-debug-apk
-          path: android/app/build/outputs/apk/debug/*.apk
+          path: app/android/app/build/outputs/apk/debug/*.apk
