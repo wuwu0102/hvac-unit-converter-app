@@ -2,8 +2,5 @@
   "appId": "com.chttwm.hvacunitconverter",
   "appName": "HVAC Unit Converter",
   "webDir": "www",
-  "server": {
-    "url": "https://wuwu0102.github.io/hvac-unit-converter/",
-    "cleartext": false
-  }
+  "bundledWebRuntime": false
 }
